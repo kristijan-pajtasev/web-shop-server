@@ -2,6 +2,7 @@ package controllers
 
 import javax.inject._
 import play.api._
+import play.api.libs.json.Json
 import play.api.mvc._
 
 /**
@@ -20,5 +21,9 @@ class HomeController @Inject()(cc: ControllerComponents) extends AbstractControl
    */
   def index() = Action { implicit request: Request[AnyContent] =>
     Ok(views.html.index())
+  }
+
+  def test() = Action {
+    Ok(Json.toJson(List(1,2)))
   }
 }
