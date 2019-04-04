@@ -10,7 +10,7 @@ GET         /test                      controllers.HomeController.test
 # TODO: items
 GET         /item                      controllers.HomeController.items
 GET         /item/recomendation        controllers.HomeController.test
-#GET         /item/:id                  controllers.HomeController.test
+GET         /item/:id                  controllers.HomeController.item(id: Int)
 POST        /item                      controllers.HomeController.test
 
 # Map static resources from the /public folder to the /assets URL path

@@ -31,4 +31,8 @@ class HomeController @Inject()(cc: ControllerComponents) extends AbstractControl
   def items() = Action {
     Ok(Json.toJson(List(Item(1, "test display"))))
   }
+
+  def item(id: Int) = Action {
+    Ok(Json.toJson(Item(id, "test display")))
+  }
 }

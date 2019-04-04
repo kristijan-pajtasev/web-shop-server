@@ -1,11 +1,13 @@
 package models
 
 import play.api.libs.json._
+
 /**
   * Created by Kristijan Pajtasev 
   * 04/04/2019.
   */
 case class Item(id: Int, displayName: String);
+
 object Item {
 
   implicit object ItemFormat extends Format[Item] {
@@ -14,6 +16,7 @@ object Item {
     def writes(item: Item): JsValue = {
       //  itemSeq == Seq[(String, play.api.libs.json.JsString)]
       val itemSeq = Seq(
+        "id" -> JsNumber(item.id),
         "displayName" -> JsString(item.displayName)
       )
       JsObject(itemSeq)
