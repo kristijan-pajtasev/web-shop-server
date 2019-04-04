@@ -1,6 +1,7 @@
 package controllers
 
 import javax.inject._
+import models.Item
 import play.api._
 import play.api.libs.json.Json
 import play.api.mvc._
@@ -25,5 +26,9 @@ class HomeController @Inject()(cc: ControllerComponents) extends AbstractControl
 
   def test() = Action {
     Ok(Json.toJson(List(1,2)))
+  }
+
+  def items() = Action {
+    Ok(Json.toJson(List(Item(1, "test display"))))
   }
 }
