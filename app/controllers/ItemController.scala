@@ -13,7 +13,7 @@ import play.api.db._
   * application's home page.
   */
 @Singleton
-class HomeController @Inject()(db: Database, val controllerComponents: ControllerComponents) extends BaseController {
+class ItemController @Inject()(db: Database, val controllerComponents: ControllerComponents) extends BaseController {
 
 
   /**
