@@ -9,22 +9,22 @@ import play.api.libs.json._
   */
 //ProductID;ProductName;Price;CategoryID;Class;ModifyDate;Resistant;IsAllergic;VitalityDays
 
-case class Item(id: Int,
-                productName: String,
-                price: Float,
-                categoryId: Int,
-                klass: String,
-                modifyDate: DateTime,
-                resistant: String,
-                isAllergic: Boolean,
-                vitalityDays: Int)
+case class Product(id: Int,
+                   productName: String,
+                   price: Float,
+                   categoryId: Int,
+                   klass: String,
+                   modifyDate: DateTime,
+                   resistant: String,
+                   isAllergic: Boolean,
+                   vitalityDays: Int)
 
-object Item {
+object Product {
 
-  implicit object ItemFormat extends Format[Item] {
+  implicit object ItemFormat extends Format[Product] {
 
     // convert from Item object to JSON (serializing to JSON)
-    def writes(item: Item): JsValue = {
+    def writes(item: Product): JsValue = {
       val itemSeq = Seq(
         "id" -> JsNumber(item.id),
         "productName" -> JsString(item.productName)
@@ -34,8 +34,8 @@ object Item {
 
     // convert from JSON string to a Item object (de-serializing from JSON)
     // (i don't need this method; just here to satisfy the api)
-    def reads(json: JsValue): JsResult[Item] = {
-      JsSuccess(Item(1, "", 1, 1, "", DateTime.now(), "", true, 1))
+    def reads(json: JsValue): JsResult[Product] = {
+      JsSuccess(Product(1, "", 1, 1, "", DateTime.now(), "", true, 1))
     }
 
   }

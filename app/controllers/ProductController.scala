@@ -2,7 +2,7 @@ package controllers
 
 import db.DBUtil
 import javax.inject._
-import models.Item
+import models.Product
 import play.api.libs.json.Json
 import play.api.mvc._
 import play.api.db._
@@ -12,8 +12,9 @@ import play.api.db._
   * application's home page.
   */
 @Singleton
-class ItemController @Inject()(db: Database,
-                               val controllerComponents: ControllerComponents)
+class ProductController @Inject()(
+    db: Database,
+    val controllerComponents: ControllerComponents)
     extends BaseController {
 
   /**
@@ -28,13 +29,13 @@ class ItemController @Inject()(db: Database,
       Ok(views.html.index())
   }
 
-  def items(page: Int): Action[AnyContent] = Action {
-    val items = DBUtil.getAllItems(db, page)
-    Ok(Json.toJson(items))
+  def products(page: Int): Action[AnyContent] = Action {
+    val products = DBUtil.getAllProducts(db, page)
+    Ok(Json.toJson(products))
   }
 
-  def item(id: Int): Action[AnyContent] = Action {
-    val item = DBUtil.getItemById(db, id)
-    Ok(Json.toJson(item))
+  def product(id: Int): Action[AnyContent] = Action {
+    val product = DBUtil.getProductById(db, id)
+    Ok(Json.toJson(product))
   }
 }
