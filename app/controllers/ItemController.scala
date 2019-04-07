@@ -28,8 +28,8 @@ class ItemController @Inject()(db: Database,
       Ok(views.html.index())
   }
 
-  def items(): Action[AnyContent] = Action {
-    val items = DBUtil.getAllItems(db)
+  def items(page: Int): Action[AnyContent] = Action {
+    val items = DBUtil.getAllItems(db, page)
     Ok(Json.toJson(items))
   }
 

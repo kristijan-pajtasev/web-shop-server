@@ -8,7 +8,7 @@ GET         /                          controllers.ItemController.index
 #GET         /test                      controllers.ItemController.test
 
 # TODO: items
-GET         /item                      controllers.ItemController.items
+GET         /item                      controllers.ItemController.items(page: Int ?=0)
 #GET         /item/recomendation        controllers.ItemController.test
 GET         /item/:id                  controllers.ItemController.item(id: Int)
 #POST        /item                      controllers.ItemController.test

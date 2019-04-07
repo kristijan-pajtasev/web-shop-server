@@ -13,10 +13,11 @@ import org.joda.time.DateTime
   * 07/04/2019.
   */
 object DBUtil {
-  def getAllItems(db: Database): List[Item] = {
+  def getAllItems(db: Database, page: Int): List[Item] = {
+    val offset = page * 10
     db.withConnection { implicit c =>
       val res2 =
-        SQL("SELECT * FROM test")
+        SQL(s"SELECT * FROM test LIMIT 10 OFFSET $offset")
           .as((int("id") ~ str("productName")).*)
           .map {
             case n ~ p => Item(n, p, 1, 1, "", DateTime.now(), "", true, 1)
