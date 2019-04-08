@@ -20,10 +20,10 @@ object DBUtil {
           .as(
             (int("id") ~ str("productName") ~ double("price") ~ int(
               "categoryId") ~ str("klass") ~ long("modifyDate") ~ get[Option[
-              String]]("resistant") ~ get[Option[Boolean]]("isAlergic") ~ get[
+              String]]("resistant") ~ get[Option[Boolean]]("isAllergic") ~ get[
               Option[Int]]("vitalityDays")).*)
           .map {
-            case i ~ p ~ price ~ categoryId ~ klass ~ modifyDate ~ resistant ~ isAlergic ~ vitalityDays =>
+            case i ~ p ~ price ~ categoryId ~ klass ~ modifyDate ~ resistant ~ isAllergic ~ vitalityDays =>
               Product(i,
                       p,
                       price,
@@ -31,7 +31,7 @@ object DBUtil {
                       klass,
                       new DateTime(modifyDate),
                       resistant,
-                      isAlergic,
+                      isAllergic,
                       vitalityDays)
           }
       res2
@@ -45,10 +45,10 @@ object DBUtil {
           .as(
             (int("id") ~ str("productName") ~ double("price") ~ int(
               "categoryId") ~ str("klass") ~ long("modifyDate") ~ get[Option[
-              String]]("resistant") ~ get[Option[Boolean]]("isAlergic") ~ get[
+              String]]("resistant") ~ get[Option[Boolean]]("isAllergic") ~ get[
               Option[Int]]("vitalityDays")).*)
           .map {
-            case i ~ p ~ price ~ categoryId ~ klass ~ modifyDate ~ resistant ~ isAlergic ~ vitalityDays =>
+            case i ~ p ~ price ~ categoryId ~ klass ~ modifyDate ~ resistant ~ isAllergic ~ vitalityDays =>
               Product(i,
                       p,
                       price,
@@ -56,10 +56,40 @@ object DBUtil {
                       klass,
                       new DateTime(modifyDate),
                       resistant,
-                      isAlergic,
+                      isAllergic,
                       vitalityDays)
           }
       res2.head
+    }
+  }
+
+  def getShoppingCart(db: Database, customer_id: Int): List[Product] = {
+    db.withConnection { implicit c =>
+      val res2 =
+        SQL(s"""
+          SELECT product.*
+          FROM shopping_cart
+          JOIN product
+          ON product.id=shopping_cart.customer_id
+          WHERE shopping_cart.customer_id=$customer_id""")
+          .as(
+            (int("id") ~ str("productName") ~ double("price") ~ int(
+              "categoryId") ~ str("klass") ~ long("modifyDate") ~ get[Option[
+              String]]("resistant") ~ get[Option[Boolean]]("isAllergic") ~ get[
+              Option[Int]]("vitalityDays")).*)
+          .map {
+            case i ~ p ~ price ~ categoryId ~ klass ~ modifyDate ~ resistant ~ isAllergic ~ vitalityDays =>
+              Product(i,
+                      p,
+                      price,
+                      categoryId,
+                      klass,
+                      new DateTime(modifyDate),
+                      resistant,
+                      isAllergic,
+                      vitalityDays)
+          }
+      res2
     }
   }
 
