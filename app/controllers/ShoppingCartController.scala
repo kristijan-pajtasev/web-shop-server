@@ -54,8 +54,8 @@ class ShoppingCartController @Inject()(
 //        }
 //      )
 //      val user = request.body.asFormUrlEncoded.get.head._1
-      val userData = request.body
-      val newUser = ShoppingItem(userData.customer_id, userData.product_id)
+      val itemData = request.body
+      val item = ShoppingItem(itemData.customer_id, itemData.product_id)
       Ok("hello")
     }
   }
