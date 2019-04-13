@@ -1,8 +1,8 @@
 package db
 
 import anorm.{SQL, ~}
-import anorm.SqlParser.{int, str, double, bool, long, get}
-import models.Product
+import anorm.SqlParser.{bool, double, get, int, long, str}
+import models.{Product, ShoppingItem}
 import play.api.db.Database
 import anorm._
 import org.joda.time.DateTime
@@ -93,4 +93,14 @@ object DBUtil {
     }
   }
 
+  def addToShoppingCart(db: Database, item: ShoppingItem): Unit = {
+    db.withConnection { implicit c =>
+      val res2 =
+        SQL(s"""
+            INSERT INTO shopping_cart(
+            customer_id, product_id, amount)
+            VALUES (${item.customer_id}, ${item.product_id}, 1);""")
+          .executeInsert()
+    }
+  }
 }
