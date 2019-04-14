@@ -12,6 +12,9 @@ import org.joda.time.DateTime
   * 07/04/2019.
   */
 object DBUtil {
+  def getRecommendedProducts(db: Database): List[Product] =
+    getAllProducts(db, 1)
+
   def getAllProducts(db: Database, page: Int): List[Product] = {
     val offset = page * 10
     db.withConnection { implicit c =>
