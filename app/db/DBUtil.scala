@@ -97,10 +97,22 @@ object DBUtil {
     db.withConnection { implicit c =>
       val res2 =
         SQL(s"""
-            INSERT INTO public.shopping_cart(customer_id, product_id, amount)
+            INSERT INTO shopping_cart(customer_id, product_id, amount)
             VALUES (${item.customer_id}, ${item.product_id}, 1)
             ON CONFLICT (customer_id, product_id) DO UPDATE SET amount = shopping_cart.amount + 1""")
           .executeInsert()
+    }
+    getProductById(db, item.product_id)
+  }
+
+  def removeFromShoppingCart(db: Database, item: ShoppingItem): Product = {
+    db.withConnection { implicit c =>
+      val res2 =
+        SQL(s"""
+            DELETE FROM shopping_cart
+            WHERE customer_id=${item.customer_id}
+              AND product_id=${item.product_id}""")
+          .executeUpdate()
     }
     getProductById(db, item.product_id)
   }

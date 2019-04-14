@@ -36,4 +36,14 @@ class ShoppingCartController @Inject()(
         Ok(Json.toJson(product))
       }
     }
+
+  def removeFromCart =
+    Action(parse.form(ShoppingItem.shoppingItemForm)) { implicit request =>
+      {
+        val itemData = request.body
+        val item = ShoppingItem(itemData.customer_id, itemData.product_id)
+        val product = DBUtil.removeFromShoppingCart(db, item)
+        Ok(Json.toJson(product))
+      }
+    }
 }
