@@ -93,14 +93,15 @@ object DBUtil {
     }
   }
 
-  def addToShoppingCart(db: Database, item: ShoppingItem): Unit = {
+  def addToShoppingCart(db: Database, item: ShoppingItem): Product = {
     db.withConnection { implicit c =>
       val res2 =
         SQL(s"""
-            INSERT INTO shopping_cart(
-            customer_id, product_id, amount)
-            VALUES (${item.customer_id}, ${item.product_id}, 1);""")
+            INSERT INTO public.shopping_cart(customer_id, product_id, amount)
+            VALUES (${item.customer_id}, ${item.product_id}, 1)
+            ON CONFLICT (customer_id, product_id) DO UPDATE SET amount = shopping_cart.amount + 1""")
           .executeInsert()
     }
+    getProductById(db, item.product_id)
   }
 }

@@ -27,27 +27,13 @@ class ShoppingCartController @Inject()(
 //    //             "Content-Type": "application/x-www-form-urlencoded",
 //  }, body: JSON.stringify({product_id: 1, customer_id: 1})})
 
-  def addToCart = Action(parse.form(ShoppingItem.shoppingItemForm)) {
-    implicit request =>
+  def addToCart =
+    Action(parse.form(ShoppingItem.shoppingItemForm)) { implicit request =>
       {
-//      shoppingItemForm.bindFromRequest.fold(
-//        formWithErrors => {
-//          // binding failure, you retrieve the form containing errors:
-////          BadRequest(views.html.user(formWithErrors))
-//          Ok("hello")
-//        },
-//        shoppingItemData => {
-//          /* binding success, you get the actual value. */
-//          val item = ShoppingItem(shoppingItemData.customer_id,
-//                                  shoppingItemData.product_id)
-//          Ok("hello")
-//        }
-//      )
-//      val user = request.body.asFormUrlEncoded.get.head._1
         val itemData = request.body
         val item = ShoppingItem(itemData.customer_id, itemData.product_id)
-        DBUtil.addToShoppingCart(db, item)
-        Ok("hello")
+        val product = DBUtil.addToShoppingCart(db, item)
+        Ok(Json.toJson(product))
       }
-  }
+    }
 }
