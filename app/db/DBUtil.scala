@@ -1,7 +1,7 @@
 package db
 
 import anorm.{SQL, ~}
-import anorm.SqlParser.{bool, double, get, int, long, str}
+import anorm.SqlParser.{int, str}
 import models.{Product, ShoppingItem}
 import play.api.db.Database
 import anorm._
@@ -19,23 +19,40 @@ object DBUtil {
     val offset = page * 10
     db.withConnection { implicit c =>
       val res2 =
-        SQL(s"SELECT * FROM product LIMIT 10 OFFSET $offset")
+        SQL(s"SELECT * FROM olist.products LIMIT 10 OFFSET $offset")
           .as(
-            (int("id") ~ str("productName") ~ double("price") ~ int(
-              "categoryId") ~ str("klass") ~ long("modifyDate") ~ get[Option[
-              String]]("resistant") ~ get[Option[Boolean]]("isAllergic") ~ get[
-              Option[Int]]("vitalityDays")).*)
+            (
+              str("product_id") ~
+                str("product_category_name") ~
+                int("product_name_length") ~
+                int("product_description_lenght") ~
+                int("product_photos_qty") ~
+                int("product_weight_g") ~
+                int("product_length_cm") ~
+                int("product_height_cm") ~
+                int("product_width_cm")
+            ).*)
           .map {
-            case i ~ p ~ price ~ categoryId ~ klass ~ modifyDate ~ resistant ~ isAllergic ~ vitalityDays =>
-              Product(i,
-                      p,
-                      price,
-                      categoryId,
-                      klass,
-                      new DateTime(modifyDate),
-                      resistant,
-                      isAllergic,
-                      vitalityDays)
+            case product_id ~
+                  product_category_name ~
+                  product_name_length ~
+                  product_description_lenght ~
+                  product_photos_qty ~
+                  product_weight_g ~
+                  product_length_cm ~
+                  product_height_cm ~
+                  product_width_cm =>
+              Product(
+                product_id,
+                product_category_name,
+                product_name_length,
+                product_description_lenght,
+                product_photos_qty,
+                product_weight_g,
+                product_length_cm,
+                product_height_cm,
+                product_width_cm
+              )
           }
       res2
     }
@@ -44,23 +61,40 @@ object DBUtil {
   def getProductById(db: Database, id: Int): Product = {
     db.withConnection { implicit c =>
       val res2 =
-        SQL(s"SELECT * FROM product WHERE id=$id")
+        SQL(s"SELECT * FROM olist.products WHERE id=$id")
           .as(
-            (int("id") ~ str("productName") ~ double("price") ~ int(
-              "categoryId") ~ str("klass") ~ long("modifyDate") ~ get[Option[
-              String]]("resistant") ~ get[Option[Boolean]]("isAllergic") ~ get[
-              Option[Int]]("vitalityDays")).*)
+            (
+              str("product_id") ~
+                str("product_category_name") ~
+                int("product_name_length") ~
+                int("product_description_lenght") ~
+                int("product_photos_qty") ~
+                int("product_weight_g") ~
+                int("product_length_cm") ~
+                int("product_height_cm") ~
+                int("product_width_cm")
+            ).*)
           .map {
-            case i ~ p ~ price ~ categoryId ~ klass ~ modifyDate ~ resistant ~ isAllergic ~ vitalityDays =>
-              Product(i,
-                      p,
-                      price,
-                      categoryId,
-                      klass,
-                      new DateTime(modifyDate),
-                      resistant,
-                      isAllergic,
-                      vitalityDays)
+            case product_id ~
+                  product_category_name ~
+                  product_name_length ~
+                  product_description_lenght ~
+                  product_photos_qty ~
+                  product_weight_g ~
+                  product_length_cm ~
+                  product_height_cm ~
+                  product_width_cm =>
+              Product(
+                product_id,
+                product_category_name,
+                product_name_length,
+                product_description_lenght,
+                product_photos_qty,
+                product_weight_g,
+                product_length_cm,
+                product_height_cm,
+                product_width_cm
+              )
           }
       res2.head
     }
@@ -76,21 +110,36 @@ object DBUtil {
           ON product.id=shopping_cart.customer_id
           WHERE shopping_cart.customer_id=$customer_id""")
           .as(
-            (int("id") ~ str("productName") ~ double("price") ~ int(
-              "categoryId") ~ str("klass") ~ long("modifyDate") ~ get[Option[
-              String]]("resistant") ~ get[Option[Boolean]]("isAllergic") ~ get[
-              Option[Int]]("vitalityDays")).*)
+            (str("product_id") ~
+              str("product_category_name") ~
+              int("product_name_length") ~
+              int("product_description_lenght") ~
+              int("product_photos_qty") ~
+              int("product_weight_g") ~
+              int("product_length_cm") ~
+              int("product_height_cm") ~
+              int("product_width_cm")).*)
           .map {
-            case i ~ p ~ price ~ categoryId ~ klass ~ modifyDate ~ resistant ~ isAllergic ~ vitalityDays =>
-              Product(i,
-                      p,
-                      price,
-                      categoryId,
-                      klass,
-                      new DateTime(modifyDate),
-                      resistant,
-                      isAllergic,
-                      vitalityDays)
+            case product_id ~
+                  product_category_name ~
+                  product_name_length ~
+                  product_description_lenght ~
+                  product_photos_qty ~
+                  product_weight_g ~
+                  product_length_cm ~
+                  product_height_cm ~
+                  product_width_cm =>
+              Product(
+                product_id,
+                product_category_name,
+                product_name_length,
+                product_description_lenght,
+                product_photos_qty,
+                product_weight_g,
+                product_length_cm,
+                product_height_cm,
+                product_width_cm
+              )
           }
       res2
     }

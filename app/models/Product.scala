@@ -9,15 +9,15 @@ import play.api.libs.json._
   */
 //ProductID;ProductName;Price;CategoryID;Class;ModifyDate;Resistant;IsAllergic;VitalityDays
 
-case class Product(id: Int,
-                   productName: String,
-                   price: Double,
-                   categoryId: Int,
-                   klass: String,
-                   modifyDate: DateTime,
-                   resistant: Option[String],
-                   isAllergic: Option[Boolean],
-                   vitalityDays: Option[Int])
+case class Product(product_id: String,
+                   product_category_name: String,
+                   product_name_length: Int,
+                   product_description_lenght: Int,
+                   product_photos_qty: Int,
+                   product_weight_g: Int,
+                   product_length_cm: Int,
+                   product_height_cm: Int,
+                   product_width_cm: Int)
 
 object Product {
 
@@ -25,25 +25,17 @@ object Product {
 
     // convert from Item object to JSON (serializing to JSON)
     def writes(item: Product): JsValue = {
-      val isAllergic = item.isAllergic match {
-        case Some(i) => i.toString
-        case _       => ""
-      }
-      val vitalityDays = item.vitalityDays match {
-        case Some(i) => i.toString
-        case _       => ""
-      }
-
       val itemSeq = Seq(
-        "id" -> JsNumber(item.id),
-        "productName" -> JsString(item.productName),
-        "price" -> JsNumber(item.price),
-        "categoryId" -> JsNumber(item.categoryId),
-        "klass" -> JsString(item.klass),
-        "modifyDate" -> JsString(item.modifyDate.toString()),
-        "resistant" -> JsString(item.resistant.getOrElse("")),
-        "isAllergic" -> JsString(isAllergic),
-        "vitalityDays" -> JsString(vitalityDays)
+        "product_id" -> JsString(item.product_id),
+        "product_category_name" -> JsString(item.product_category_name),
+        "product_name_length" -> JsNumber(item.product_name_length),
+        "product_description_lenght" -> JsNumber(
+          item.product_description_lenght),
+        "product_photos_qty" -> JsNumber(item.product_photos_qty),
+        "product_weight_g" -> JsNumber(item.product_weight_g),
+        "product_length_cm" -> JsNumber(item.product_length_cm),
+        "product_height_cm" -> JsNumber(item.product_height_cm),
+        "product_width_cm" -> JsNumber(item.product_width_cm)
       )
       JsObject(itemSeq)
     }
@@ -51,16 +43,7 @@ object Product {
     // convert from JSON string to a Item object (de-serializing from JSON)
     // (i don't need this method; just here to satisfy the api)
     def reads(json: JsValue): JsResult[Product] = {
-      JsSuccess(
-        Product(1,
-                "",
-                1,
-                1,
-                "",
-                DateTime.now(),
-                Option(""),
-                Option(true),
-                Option(1)))
+      JsSuccess(Product("1", "", 1, 1, 1, 1, 1, 1, 1))
     }
 
   }
