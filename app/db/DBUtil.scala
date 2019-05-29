@@ -58,10 +58,10 @@ object DBUtil {
     }
   }
 
-  def getProductById(db: Database, id: Int): Product = {
+  def getProductById(db: Database, id: String): Product = {
     db.withConnection { implicit c =>
       val res2 =
-        SQL(s"SELECT * FROM olist.products WHERE id=$id")
+        SQL(s"SELECT * FROM olist.products WHERE product_id='$id'")
           .as(
             (
               str("product_id") ~

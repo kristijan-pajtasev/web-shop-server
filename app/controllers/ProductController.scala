@@ -34,7 +34,7 @@ class ProductController @Inject()(
     Ok(Json.toJson(products))
   }
 
-  def product(id: Int): Action[AnyContent] = Action {
+  def product(id: String): Action[AnyContent] = Action {
     val product = DBUtil.getProductById(db, id)
     Ok(Json.toJson(product))
   }

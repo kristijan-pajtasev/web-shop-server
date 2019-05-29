@@ -11,7 +11,7 @@ GET           /                     controllers.ProductController.index
 # TODO: items
 GET           /product              controllers.ProductController.products(page: Int ?=0)
 #GET         /product/recomendation        controllers.ProductController.test
-GET           /product/:id          controllers.ProductController.product(id: Int)
+GET           /product/:id          controllers.ProductController.product(id: String)
 #POST        /product                      controllers.ProductController.test
 
 # SHOPPING CART
