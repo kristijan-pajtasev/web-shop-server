@@ -38,4 +38,9 @@ class ProductController @Inject()(
     val product = DBUtil.getProductById(db, id)
     Ok(Json.toJson(product))
   }
+
+  def totalProducts(): Action[AnyContent] = Action {
+    val totalItems = DBUtil.getTotalProductsCount(db)
+    Ok("Total: " + totalItems)
+  }
 }

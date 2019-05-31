@@ -5,7 +5,6 @@ import anorm.SqlParser.{int, str}
 import models.{Product, ShoppingItem}
 import play.api.db.Database
 import anorm._
-import org.joda.time.DateTime
 
 /**
   * Created by Kristijan Pajtasev
@@ -14,6 +13,16 @@ import org.joda.time.DateTime
 object DBUtil {
   def getRecommendedProducts(db: Database): List[Product] =
     getAllProducts(db, 1)
+
+  def getTotalProductsCount(db: Database): Int = {
+    db.withConnection { implicit c =>
+      val res2 =
+        SQL(s"SELECT count(*) as total FROM olist.products")
+          .as(int("total").*)
+          .head
+      return res2
+    }
+  }
 
   def getAllProducts(db: Database, page: Int): List[Product] = {
     val offset = page * 10
