@@ -30,7 +30,7 @@ class ProductController @Inject()(
   }
 
   def products(page: Int): Action[AnyContent] = Action {
-    val products = DBUtil.getAllProductsWithTotal(db, page)
+    val products = DBUtil.getAllProductsWithTotal(db, page - 1)
     Ok(Json.toJson(products))
   }
 

@@ -27,7 +27,7 @@ object DBUtil {
   def getAllProductsWithTotal(db: Database, page: Int): ProductWrapper = {
     val products = getAllProducts(db, page)
     val total = getTotalProductsCount(db)
-    ProductWrapper(products, total, page)
+    ProductWrapper(products, total, page + 1)
   }
 
   def getAllProducts(db: Database, page: Int): List[Product] = {
