@@ -2,7 +2,7 @@ package db
 
 import anorm.{SQL, ~}
 import anorm.SqlParser.{int, str}
-import models.{Product, ShoppingItem}
+import models.{Product, ProductWrapper, ShoppingItem}
 import play.api.db.Database
 import anorm._
 
@@ -22,6 +22,12 @@ object DBUtil {
           .head
       return res2
     }
+  }
+
+  def getAllProductsWithTotal(db: Database, page: Int): ProductWrapper = {
+    val products = getAllProducts(db, page)
+    val total = getTotalProductsCount(db)
+    ProductWrapper(products, total, page)
   }
 
   def getAllProducts(db: Database, page: Int): List[Product] = {
