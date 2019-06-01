@@ -32,6 +32,11 @@ class ShoppingCartController @Inject()(
       }
     }
 
+  def purchaseCart(page: Int): Action[AnyContent] = Action {
+    DBUtil.purchase(db, 1)
+    Ok("success")
+  }
+
   def removeFromCart =
     Action(parse.form(ShoppingItem.shoppingItemForm)) { implicit request =>
       {

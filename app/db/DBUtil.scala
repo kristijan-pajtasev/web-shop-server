@@ -5,12 +5,48 @@ import anorm.SqlParser.{int, str}
 import models.{Product, ProductWrapper, ShoppingItem}
 import play.api.db.Database
 import anorm._
+import java.util.UUID.randomUUID
 
 /**
   * Created by Kristijan Pajtasev
   * 07/04/2019.
   */
 object DBUtil {
+  def purchase(db: Database, customerId: Int) = {
+    db.withConnection { implicit c =>
+      val shoppingCart = getShoppingCart(db, customerId)
+      var index = 1
+      shoppingCart.foreach(product => {
+        addOrder(db, customerId, product, index)
+        index = index + 1
+      })
+      emptyCart(db, customerId)
+    }
+  }
+
+  def emptyCart(db: Database, customerId: Int) = {
+    db.withConnection { implicit c =>
+      SQL(s"""DELETE * FROM olist.orders WHERE customer_id='$customerId'""")
+        .executeQuery()
+    }
+  }
+
+  def addOrder(db: Database, customerId: Int, product: Product, index: Int) = {
+    db.withConnection { implicit c =>
+      SQL(s"""
+           |INSERT INTO olist.orders(
+           |    order_id
+           |    order_item_id
+           |    product_id
+           |    seller_id
+           |    shipping_limit_date
+           |    price
+           |    freight_value)
+           |VALUES (${randomUUID()}, $index,'${product.product_id}', ${randomUUID()}, NOW(), 0, 0)""")
+        .executeInsert()
+    }
+  }
+
   def getRecommendedProducts(db: Database): List[Product] =
     getAllProducts(db, 1)
 
