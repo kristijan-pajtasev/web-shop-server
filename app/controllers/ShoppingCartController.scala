@@ -22,11 +22,6 @@ class ShoppingCartController @Inject()(
     Ok(Json.toJson(products))
   }
 
-//  fetch("http://localhost:9000/shopping-cart", {method: "post", headers: {
-//    "Content-Type": "application/json",
-//    //             "Content-Type": "application/x-www-form-urlencoded",
-//  }, body: JSON.stringify({product_id: 1, customer_id: 1})})
-
   def addToCart =
     Action(parse.form(ShoppingItem.shoppingItemForm)) { implicit request =>
       {
