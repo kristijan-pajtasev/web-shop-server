@@ -218,9 +218,9 @@ object DBUtil {
     db.withConnection { implicit c =>
       val res2 =
         SQL(s"""
-            DELETE FROM shopping_cart
+            DELETE FROM olist.shopping_cart
             WHERE customer_id=${item.customer_id}
-              AND product_id=${item.product_id}""")
+              AND product_id='${item.product_id}'""")
           .executeUpdate()
     }
     getProductById(db, item.product_id)
