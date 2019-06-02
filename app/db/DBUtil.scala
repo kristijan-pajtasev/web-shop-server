@@ -155,11 +155,11 @@ object DBUtil {
     db.withConnection { implicit c =>
       val res2 =
         SQL(s"""
-          SELECT product.*
-          FROM shopping_cart
-          JOIN product
-          ON product.id=shopping_cart.customer_id
-          WHERE shopping_cart.customer_id=$customer_id""")
+          SELECT olist.products.*
+          FROM olist.shopping_cart
+          JOIN olist.products
+          ON olist.products.product_id=olist.shopping_cart.product_id
+          WHERE olist.shopping_cart.customer_id=$customer_id""")
           .as(
             (str("product_id") ~
               str("product_category_name") ~
