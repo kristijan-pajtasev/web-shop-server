@@ -32,7 +32,7 @@ class ShoppingCartController @Inject()(
       }
     }
 
-  def purchaseCart(page: Int): Action[AnyContent] = Action {
+  def purchaseCart(): Action[AnyContent] = Action {
     DBUtil.purchase(db, 1)
     Ok("success")
   }

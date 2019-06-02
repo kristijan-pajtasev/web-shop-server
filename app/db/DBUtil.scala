@@ -17,7 +17,8 @@ object DBUtil {
       val shoppingCart = getShoppingCart(db, customerId)
       var index = 1
       shoppingCart.foreach(product => {
-        addOrder(db, customerId, product, index)
+        val orderId = randomUUID().toString
+        addOrder(db, customerId, product, index, orderId)
         index = index + 1
       })
       emptyCart(db, customerId)
@@ -26,24 +27,29 @@ object DBUtil {
 
   def emptyCart(db: Database, customerId: Int) = {
     db.withConnection { implicit c =>
-      SQL(s"""DELETE * FROM olist.orders WHERE customer_id='$customerId'""")
-        .executeQuery()
+      SQL(s"""DELETE FROM olist.shopping_cart WHERE customer_id=$customerId""")
+        .executeUpdate()
     }
   }
 
-  def addOrder(db: Database, customerId: Int, product: Product, index: Int) = {
+  def addOrder(db: Database,
+               customerId: Int,
+               product: Product,
+               index: Int,
+               orderId: String) = {
     db.withConnection { implicit c =>
-      SQL(s"""
-           |INSERT INTO olist.orders(
-           |    order_id
-           |    order_item_id
-           |    product_id
-           |    seller_id
-           |    shipping_limit_date
-           |    price
-           |    freight_value)
-           |VALUES (${randomUUID()}, $index,'${product.product_id}', ${randomUUID()}, NOW(), 0, 0)""")
-        .executeInsert()
+      val sql = s"""
+           INSERT INTO olist.orders(
+               order_id,
+               order_item_id,
+               product_id,
+               seller_id,
+               shipping_limit_date,
+               price,
+               freight_value)
+           VALUES ('${orderId}', ${index}, '${product.product_id}', '${randomUUID()}', NOW(), 0, 0)"""
+      SQL(sql)
+        .executeInsert(SqlParser.scalar[String].singleOpt)
     }
   }
 
