@@ -21,6 +21,19 @@ case class Product(product_id: String,
 
 object Product {
 
+  def fromCartProduct(cartProduct: CartProduct): Product =
+    Product(
+      cartProduct.product_id,
+      cartProduct.product_category_name,
+      cartProduct.product_name_length,
+      cartProduct.product_description_lenght,
+      cartProduct.product_photos_qty,
+      cartProduct.product_weight_g,
+      cartProduct.product_length_cm,
+      cartProduct.product_height_cm,
+      cartProduct.product_width_cm
+    )
+
   implicit object ItemFormat extends Format[Product] {
 
     // convert from Item object to JSON (serializing to JSON)
@@ -45,7 +58,6 @@ object Product {
     def reads(json: JsValue): JsResult[Product] = {
       JsSuccess(Product("1", "", 1, 1, 1, 1, 1, 1, 1))
     }
-
   }
 
 }

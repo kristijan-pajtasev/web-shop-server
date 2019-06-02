@@ -2,7 +2,7 @@ package db
 
 import anorm.{SQL, ~}
 import anorm.SqlParser.{int, str}
-import models.{Product, ProductWrapper, ShoppingItem}
+import models.{CartProduct, Product, ProductWrapper, ShoppingItem}
 import play.api.db.Database
 import anorm._
 import java.util.UUID.randomUUID
@@ -18,7 +18,11 @@ object DBUtil {
       var index = 1
       shoppingCart.foreach(product => {
         val orderId = randomUUID().toString
-        addOrder(db, customerId, product, index, orderId)
+        addOrder(db,
+                 customerId,
+                 Product.fromCartProduct(product),
+                 index,
+                 orderId)
         index = index + 1
       })
       emptyCart(db, customerId)
@@ -38,7 +42,8 @@ object DBUtil {
                index: Int,
                orderId: String) = {
     db.withConnection { implicit c =>
-      val sql = s"""
+      val sql =
+        s"""
            INSERT INTO olist.orders(
                order_id,
                order_item_id,
@@ -157,11 +162,11 @@ object DBUtil {
     }
   }
 
-  def getShoppingCart(db: Database, customer_id: Int): List[Product] = {
+  def getShoppingCart(db: Database, customer_id: Int): List[CartProduct] = {
     db.withConnection { implicit c =>
       val res2 =
         SQL(s"""
-          SELECT olist.products.*
+          SELECT olist.products.*, olist.shopping_cart.amount
           FROM olist.shopping_cart
           JOIN olist.products
           ON olist.products.product_id=olist.shopping_cart.product_id
@@ -175,7 +180,8 @@ object DBUtil {
               int("product_weight_g") ~
               int("product_length_cm") ~
               int("product_height_cm") ~
-              int("product_width_cm")).*)
+              int("product_width_cm") ~
+              int("amount")).*)
           .map {
             case product_id ~
                   product_category_name ~
@@ -185,8 +191,9 @@ object DBUtil {
                   product_weight_g ~
                   product_length_cm ~
                   product_height_cm ~
-                  product_width_cm =>
-              Product(
+                  product_width_cm ~
+                  amount =>
+              CartProduct(
                 product_id,
                 product_category_name,
                 product_name_length,
@@ -195,7 +202,8 @@ object DBUtil {
                 product_weight_g,
                 product_length_cm,
                 product_height_cm,
-                product_width_cm
+                product_width_cm,
+                amount
               )
           }
       res2
