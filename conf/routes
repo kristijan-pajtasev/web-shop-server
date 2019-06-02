@@ -9,9 +9,8 @@ GET           /                              controllers.ProductController.index
 
 # ITEMS
 # TODO: items
-GET           /product                       controllers.ProductController.products(page: Int ?=0)
+GET           /product                       controllers.ProductController.products(page: Int ?=0, search: String ?= "")
 #GET         /product/recomendation        controllers.ProductController.test
-GET           /product/total                 controllers.ProductController.totalProducts()
 GET           /product/:id                   controllers.ProductController.product(id: String)
 #POST        /product                      controllers.ProductController.test
 

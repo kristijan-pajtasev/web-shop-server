@@ -29,18 +29,13 @@ class ProductController @Inject()(
       Ok(views.html.index())
   }
 
-  def products(page: Int): Action[AnyContent] = Action {
-    val products = DBUtil.getAllProductsWithTotal(db, page - 1)
+  def products(page: Int, search: String): Action[AnyContent] = Action {
+    val products = DBUtil.getAllProductsWithTotal(db, page - 1, search)
     Ok(Json.toJson(products))
   }
 
   def product(id: String): Action[AnyContent] = Action {
     val product = DBUtil.getProductById(db, id)
     Ok(Json.toJson(product))
-  }
-
-  def totalProducts(): Action[AnyContent] = Action {
-    val totalItems = DBUtil.getTotalProductsCount(db)
-    Ok("Total: " + totalItems)
   }
 }

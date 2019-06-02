@@ -7,6 +7,8 @@ import play.api.db.Database
 import anorm._
 import java.util.UUID.randomUUID
 
+import db.DBUtil.getAllProducts
+
 /**
   * Created by Kristijan Pajtasev
   * 07/04/2019.
@@ -58,30 +60,60 @@ object DBUtil {
     }
   }
 
+  def getQueryString(query: String): String = {
+    if (query.matches("\\d+") || query.matches("\\d+\\.\\d+"))
+      s"""WHERE 
+      product_weight_g=$query OR
+      product_length_cm=$query OR
+      product_height_cm=$query OR
+      product_width_cm=$query"""
+    else
+      s"""WHERE product_category_name='$query' OR
+      product_id='$query'"""
+  }
+
+  def getAllProducts(db: Database, page: Int): List[Product] =
+    getAllProducts(db, page, "")
+
   def getRecommendedProducts(db: Database): List[Product] =
     getAllProducts(db, 1)
 
-  def getTotalProductsCount(db: Database): Int = {
+  def getTotalProductsCount(db: Database, search: String): Int = {
     db.withConnection { implicit c =>
+      val sql =
+        if (search.equals("")) s"SELECT count(*) as total FROM olist.products"
+        else {
+          val query = getQueryString(search)
+          s"SELECT count(*) as total FROM olist.products $query"
+        }
       val res2 =
-        SQL(s"SELECT count(*) as total FROM olist.products")
+        SQL(sql)
           .as(int("total").*)
           .head
       return res2
     }
   }
 
-  def getAllProductsWithTotal(db: Database, page: Int): ProductWrapper = {
-    val products = getAllProducts(db, page)
-    val total = getTotalProductsCount(db)
+  def getAllProductsWithTotal(db: Database,
+                              page: Int,
+                              search: String): ProductWrapper = {
+    val products = getAllProducts(db, page, search)
+    val total = getTotalProductsCount(db, search)
     ProductWrapper(products, total, page + 1)
   }
 
-  def getAllProducts(db: Database, page: Int): List[Product] = {
+  def getAllProducts(db: Database, page: Int, search: String): List[Product] = {
     val offset = page * 10
     db.withConnection { implicit c =>
+      val sql =
+        if (search.equals(""))
+          s"SELECT * FROM olist.products LIMIT 10 OFFSET $offset"
+        else {
+          val query = getQueryString(search)
+          s"SELECT * FROM olist.products $query  LIMIT 10 OFFSET $offset"
+        }
       val res2 =
-        SQL(s"SELECT * FROM olist.products LIMIT 10 OFFSET $offset")
+        SQL(sql)
           .as(
             (
               str("product_id") ~
