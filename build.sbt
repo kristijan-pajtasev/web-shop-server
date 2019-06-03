@@ -11,6 +11,7 @@ libraryDependencies += guice
 libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "4.0.1" % Test
 libraryDependencies ++= Seq(jdbc, "org.playframework.anorm" %% "anorm" % "2.6.2")
 libraryDependencies += "org.postgresql" % "postgresql" % "9.4-1200-jdbc41"
+libraryDependencies += ws
 
 // Adds additional packages into Twirl
 //TwirlKeys.templateImports += "com.example.controllers._"

@@ -265,4 +265,8 @@ object DBUtil {
     }
     getProductById(db, item.product_id)
   }
+
+  def getProductsByIds(db: Database, ids: List[String]): List[Product] = {
+    ids.map(id => getProductById(db, id))
+  }
 }
