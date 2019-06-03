@@ -18,8 +18,12 @@ object DBUtil {
     db.withConnection { implicit c =>
       val shoppingCart = getShoppingCart(db, customerId)
       var index = 1
+      val orderId = randomUUID().toString
+      saveOrder(db, orderId, customerId)
+      val productIds: List[String] =
+        shoppingCart.map(product => product.product_id)
+      saveOrderItems(db, productIds, orderId)
       shoppingCart.foreach(product => {
-        val orderId = randomUUID().toString
         addOrder(db,
                  customerId,
                  Product.fromCartProduct(product),
@@ -28,6 +32,34 @@ object DBUtil {
         index = index + 1
       })
       emptyCart(db, customerId)
+    }
+  }
+
+  def saveOrderItems(db: Database,
+                     productIds: List[String],
+                     orderId: String) = {
+    db.withConnection { implicit c =>
+      val ids = productIds.map(id => s"'$id'").mkString(",")
+      val sql =
+        s"""
+           INSERT INTO olist.order_products(
+               order_id,
+               product_ids) VALUES ('$orderId', ARRAY[$ids])"""
+      SQL(sql)
+        .executeInsert(SqlParser.scalar[String].singleOpt)
+    }
+  }
+
+  def saveOrder(db: Database, orderId: String, customerId: Int) = {
+    db.withConnection { implicit c =>
+      val sql =
+        s"""
+           INSERT INTO olist.order_customer(
+               order_id,
+               customer_id)
+           VALUES ('${orderId}', ${customerId})"""
+      SQL(sql)
+        .executeInsert(SqlParser.scalar[String].singleOpt)
     }
   }
 
