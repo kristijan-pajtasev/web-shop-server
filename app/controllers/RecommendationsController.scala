@@ -35,4 +35,15 @@ class RecommendationsController @Inject()(
       }
     idsFuture
   }
+
+  def basket() = Action.async {
+    val idsFuture: Future[Result] = ws
+      .url("http://127.0.0.1:8000/market_basket/1")
+      .get()
+      .map { response =>
+        val ids = (response.json \ "recommended").as[List[String]]
+        Ok(Json.toJson(DBUtil.getProductsByIds(db, ids)))
+      }
+    idsFuture
+  }
 }
