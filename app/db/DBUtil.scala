@@ -135,14 +135,14 @@ object DBUtil {
   }
 
   def getAllProducts(db: Database, page: Int, search: String): List[Product] = {
-    val offset = page * 10
+    val offset = page * 12
     db.withConnection { implicit c =>
       val sql =
         if (search.equals(""))
-          s"SELECT * FROM olist.products LIMIT 10 OFFSET $offset"
+          s"SELECT * FROM olist.products LIMIT 12 OFFSET $offset"
         else {
           val query = getQueryString(search)
-          s"SELECT * FROM olist.products $query  LIMIT 10 OFFSET $offset"
+          s"SELECT * FROM olist.products $query  LIMIT 12 OFFSET $offset"
         }
       val res2 =
         SQL(sql)
