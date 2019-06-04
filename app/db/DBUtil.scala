@@ -30,6 +30,7 @@ object DBUtil {
                  index,
                  orderId)
         index = index + 1
+        addCustomerProduct(db, product.product_id, s"$customerId")
       })
       emptyCart(db, customerId)
     }
@@ -284,6 +285,19 @@ object DBUtil {
           .executeInsert()
     }
     getProductById(db, item.product_id)
+  }
+
+  def addCustomerProduct(db: Database,
+                         productId: String,
+                         customerId: String): Unit = {
+    db.withConnection { implicit c =>
+      val add_customer_product_sql =
+        s"""INSERT INTO olist.customer_product (customer_id, product_id)
+              VALUES ('$customerId', '$productId')
+              ON CONFLICT DO NOTHING;"""
+      SQL(add_customer_product_sql)
+        .executeInsert()
+    }
   }
 
   def removeFromShoppingCart(db: Database, item: ShoppingItem): Product = {
