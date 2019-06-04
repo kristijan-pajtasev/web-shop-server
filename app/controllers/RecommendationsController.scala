@@ -3,6 +3,7 @@ package controllers
 import scala.util.{Failure, Success}
 import db.DBUtil
 import javax.inject._
+import play.api.Configuration
 import play.api.db._
 import play.api.libs.json.Json
 import play.api.libs.ws
@@ -21,12 +22,14 @@ class RecommendationsController @Inject()(
     db: Database,
     ws: WSClient,
     ec: ExecutionContext,
+    config: Configuration,
     val controllerComponents: ControllerComponents)
     extends BaseController {
 
   def similar(productId: String) = Action.async {
+    val url = config.get[String]("recommendationsApi")
     val idsFuture: Future[Result] = ws
-      .url("http://127.0.0.1:8000/similar/1e9e8ef04dbcff4541ed26657ea517e5")
+      .url(s"$url/similar/$productId")
       .get()
       .map { response =>
         val ids = (response.json \ "ids").as[List[String]]
@@ -37,8 +40,9 @@ class RecommendationsController @Inject()(
   }
 
   def basket() = Action.async {
+    val url = config.get[String]("recommendationsApi")
     val idsFuture: Future[Result] = ws
-      .url("http://127.0.0.1:8000/market_basket/1")
+      .url(s"$url/market_basket/1")
       .get()
       .map { response =>
         val ids = (response.json \ "recommended").as[List[String]]
